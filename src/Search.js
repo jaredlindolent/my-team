@@ -6,7 +6,11 @@ const Search = () => {
     const [email, setEmail] = useState('');
 
     const updateSearchData = (e) => {
-        console.log(e.target.name);
+        if (e.target.name === "firstName") { setName(e.target.value) }
+        if (e.target.name === "email") { setEmail(e.target.email) }
+    }
+
+    const onSubmitHandler = () => {
     }
 
     return (
@@ -25,7 +29,7 @@ const Search = () => {
                 type="email"
                 name="email"
             />
-            <button type="submit">Submit</button>
+            <button type="submit" onClick={onSubmitHandler}>Submit</button>
         </form>
     )
 }
