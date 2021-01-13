@@ -13,15 +13,14 @@ const Search = (props) => {
     }
 
     return (
-        <form>
-            <input
-                value={searchField}
-                onChange={e => updateSearchData(e)}
-                placeholder="Search by name or e-mail"
-                type="text"
-                name="searchField"
-            />
-        </form>
+        <input
+            value={searchField}
+            onChange={e => updateSearchData(e)}
+            placeholder="Search by name or e-mail"
+            type="text"
+            name="searchField"
+            autoFocus={true}
+        />
     )
 }
 
