@@ -7,6 +7,7 @@ const MyTeam = () => {
   const [searchField, setSearchField] = useState([]);
   const [members, setMembers] = useState([]);
   const [showCard, setShowCard] = useState(false);
+  const [resultsPanel, setResultsPanel] = useState(false);
 
   const loadData = async () => {
     const endpoint = 'https://jsonplaceholder.typicode.com/users';
@@ -24,31 +25,55 @@ const MyTeam = () => {
   useEffect(() => {
     if (members.length > 0) {
       setShowCard(true);
+      setResultsPanel(false);
     }
   }, [members]);
 
   const onSearchChangeHandler = (value) => {
+    setResultsPanel(false);
     setSearchField([]);
     setSearchField(value);
   }
 
-  const onSubmitHandler = () => {
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    setResultsPanel(false);
     setMembers([]);
-    let found = team.find(item => item.name === searchField);
-    if (found !== undefined) {
-      setMembers(members => [...members, found]);
-    } else { setShowCard(false) }
+    let found = [];
+    if (searchField !== '') {
+      if (team.find(item => item.name === searchField) !== undefined) {
+        found.push(team.find(item => item.name === searchField));
+      }
+      if (team.find(item => item.email === searchField) !== undefined) {
+        found.push(team.find(item => item.email === searchField));
+      }
+      if (found.length > 0) {
+        setMembers(found);
+      } else {
+        setResultsPanel(true);
+        setShowCard(false);
+      }
+    }
   }
 
   return (
     <div className="App">
-      <Search onSearchChanged={onSearchChangeHandler} props={team} />
-      <button type="submit" onClick={onSubmitHandler}>Submit</button>
+      <form onClick={onSubmitHandler}>
+        <h1 className="title">Search for My Team</h1>
+        <div>
+          <div style={{ float: "left" }}>
+            <Search onSearchChanged={onSearchChangeHandler} props={team} />
+          </div>
+          <div style={{ float: "right" }}>
+            <button type="submit">Submit</button>
+          </div>
+        </div>
+      </form>
 
       {showCard ?
         <>
-          {members.map(item => (
-            <div key={item.id} className="card">
+          {members.map((item, index) => (
+            <div key={index} className="card">
               <div className="container">
                 <h4><b>{item.name}</b></h4>
                 <p><b>E-mail:</b> {item.email}</p>
@@ -62,7 +87,15 @@ const MyTeam = () => {
           ))}
         </>
         : null}
-    </div>
+
+      {resultsPanel ?
+        <>
+          <div className="results-panel" style={{ backgroundColor: '#FFCCBB' }}>
+            <div><p>No results were found for <b>{searchField}</b>, please try again.</p></div>
+          </div>
+        </>
+        : null}
+    </div >
   );
 }
 
