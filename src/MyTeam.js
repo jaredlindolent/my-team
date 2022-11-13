@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import './style.css';
+import './Style.css';
 import Search from './Search';
 
 const MyTeam = () => {
